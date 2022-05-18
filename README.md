@@ -37,10 +37,10 @@ View the app on Replit: [replit](https://replit.com/@jenniferlei/shopify-product
 
 ## Tech Stack
 
-**Backend:** Python3, Flask, SQLAlchemy
-**Frontend:** JavaScript (React), HTML5, CSS3, Bootstrap
-**Database:** PostgreSQL
-**API:** [OpenWeather](https://openweathermap.org/api)
+**Backend:** Python3, Flask, SQLAlchemy\
+**Frontend:** JavaScript (React), HTML5, CSS3, Bootstrap\
+**Database:** PostgreSQL\
+**API:** [OpenWeather](https://openweathermap.org/api)\
 
 ## Installation
 
