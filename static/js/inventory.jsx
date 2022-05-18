@@ -806,41 +806,43 @@ const InventoryContainer = () => {
               </h6>
             </div>
             <div className="card-body me-2">
-              <table className="table table-striped table-sm">
-                <thead>
-                  <tr>
-                    <th role="columnheader">ID</th>
-                    <th role="columnheader">SKU</th>
-                    <th role="columnheader">Product Name</th>
-                    <th role="columnheader">Description</th>
-                    <th role="columnheader">Quantity</th>
-                    <th role="columnheader">Unit</th>
-                    <th role="columnheader">City</th>
-                    <th role="columnheader">Weather</th>
-                    {view === "active" ? (
-                      <React.Fragment>
-                        <th role="columnheader">Edit</th>
-                        <th role="columnheader">Delete</th>
-                      </React.Fragment>
-                    ) : view === "deleted" ? (
-                      <React.Fragment>
-                        <th role="columnheader">Comments</th>
-                        <th role="columnheader">Restore</th>
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>
-                        <th role="columnheader">Status</th>
-                        <th role="columnheader">
-                          Comments <small>(Deleted)</small>
-                        </th>
-                        <th role="columnheader">Actions</th>
-                      </React.Fragment>
-                    )}
-                  </tr>
-                </thead>
+              <div className="table-responsive">
+                <table className="table table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th role="columnheader">ID</th>
+                      <th role="columnheader">SKU</th>
+                      <th role="columnheader">Product Name</th>
+                      <th role="columnheader">Description</th>
+                      <th role="columnheader">Quantity</th>
+                      <th role="columnheader">Unit</th>
+                      <th role="columnheader">City</th>
+                      <th role="columnheader">Weather</th>
+                      {view === "active" ? (
+                        <React.Fragment>
+                          <th role="columnheader">Edit</th>
+                          <th role="columnheader">Delete</th>
+                        </React.Fragment>
+                      ) : view === "deleted" ? (
+                        <React.Fragment>
+                          <th role="columnheader">Comments</th>
+                          <th role="columnheader">Restore</th>
+                        </React.Fragment>
+                      ) : (
+                        <React.Fragment>
+                          <th role="columnheader">Status</th>
+                          <th role="columnheader">
+                            Comments <small>(Deleted)</small>
+                          </th>
+                          <th role="columnheader">Actions</th>
+                        </React.Fragment>
+                      )}
+                    </tr>
+                  </thead>
 
-                <tbody>{allInventoryRows}</tbody>
-              </table>
+                  <tbody>{allInventoryRows}</tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
