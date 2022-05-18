@@ -19,7 +19,7 @@ class FlaskTestsBasic(TestCase):
         """Test homepage page."""
 
         result = self.client.get("/")
-        self.assertIn(b"Shopify Backend", result.data)
+        self.assertIn(b"Shopify Production", result.data)
 
 
 class FlaskTestsDatabase(TestCase):
@@ -49,7 +49,7 @@ class FlaskTestsDatabase(TestCase):
 
         # test successful create
         result = self.client.post("/api/create_inventory",
-                                  json={"warehouseId": "1",\
+                                  json={"city": "Long Beach",\
                                         "sku": "12345",\
                                         "quantity": "10",\
                                         "description": ""})
@@ -57,69 +57,61 @@ class FlaskTestsDatabase(TestCase):
         self.assertIn(b'"sku":"12345"', result.data)
         self.assertIn(b'"deleted":false', result.data)
 
-        # test invalid input: not str(warehouse_id).isnumeric()
+        # test invalid input: not str(sku).isalnum()
         result2 = self.client.post("/api/create_inventory",
-                                  json={"warehouseId": "A",\
-                                        "sku": "12345",\
+                                  json={"city": "Long Beach",\
+                                        "sku": "1!324",\
                                         "quantity": "10",\
                                         "description": ""})
         self.assertIn(b'{"data":"invalid input","status":400}', result2.data)
 
-        # test invalid input: not str(sku).isalnum()
+        # test invalid input: len(str(sku)) > 8
         result3 = self.client.post("/api/create_inventory",
-                                  json={"warehouseId": "1",\
-                                        "sku": "1!324",\
+                                  json={"city": "Long Beach",\
+                                        "sku": "123456789",\
                                         "quantity": "10",\
                                         "description": ""})
         self.assertIn(b'{"data":"invalid input","status":400}', result3.data)
 
-        # test invalid input: len(str(sku)) > 8
-        result4 = self.client.post("/api/create_inventory",
-                                  json={"warehouseId": "1",\
-                                        "sku": "123456789",\
-                                        "quantity": "10",\
-                                        "description": ""})
-        self.assertIn(b'{"data":"invalid input","status":400}', result4.data)
-
         # test invalid input: not str(quantity).isnumeric()
-        result5 = self.client.post("/api/create_inventory",
-                                  json={"warehouseId": "1",\
+        result4 = self.client.post("/api/create_inventory",
+                                  json={"city": "Long Beach",\
                                         "sku": "12324",\
                                         "quantity": "A",\
                                         "description": ""})
-        self.assertIn(b'{"data":"invalid input","status":400}', result5.data)
+        self.assertIn(b'{"data":"invalid input","status":400}', result4.data)
 
         # test invalid input: warehouseId == ""
-        result6 = self.client.post("/api/create_inventory",
-                                  json={"warehouseId": "",\
+        result5 = self.client.post("/api/create_inventory",
+                                  json={"city": "",\
                                         "sku": "12345",\
+                                        "quantity": "10",\
+                                        "description": ""})
+        self.assertIn(b'{"data":"invalid input","status":400}', result5.data)
+
+        # test invalid input: sku == ""
+        result6 = self.client.post("/api/create_inventory",
+                                  json={"city": "Long Beach",\
+                                        "sku": "",\
                                         "quantity": "10",\
                                         "description": ""})
         self.assertIn(b'{"data":"invalid input","status":400}', result6.data)
 
-        # test invalid input: sku == ""
-        result7 = self.client.post("/api/create_inventory",
-                                  json={"warehouseId": "1",\
-                                        "sku": "",\
-                                        "quantity": "10",\
-                                        "description": ""})
-        self.assertIn(b'{"data":"invalid input","status":400}', result7.data)
-
         # test invalid input: quantity == ""
-        result8 = self.client.post("/api/create_inventory",
-                                  json={"warehouseId": "1",\
+        result7 = self.client.post("/api/create_inventory",
+                                  json={"city": "Long Beach",\
                                         "sku": "12345",\
                                         "quantity": "",\
                                         "description": ""})
-        self.assertIn(b'{"data":"invalid input","status":400}', result8.data)
+        self.assertIn(b'{"data":"invalid input","status":400}', result7.data)
 
         # test invalid input: int(quantity) < 0
-        result9 = self.client.post("/api/create_inventory",
-                                  json={"warehouseId": "1",\
+        result8 = self.client.post("/api/create_inventory",
+                                  json={"city": "Long Beach",\
                                         "sku": "12345",\
                                         "quantity": "-1",\
                                         "description": ""})
-        self.assertIn(b'{"data":"invalid input","status":400}', result9.data)
+        self.assertIn(b'{"data":"invalid input","status":400}', result8.data)
 
     def test_view_inventory(self):
         """Test view inventory route."""
@@ -145,18 +137,19 @@ class FlaskTestsDatabase(TestCase):
 
         # test successful update
         result = self.client.put("/api/update_inventory/id:1",
-                                  json={"warehouseId": "2",\
-                                        "sku": "0000005",\
+                                  json={"city": "Long Beach",\
+                                        "sku": "65SH4FGF",\
                                         "quantity": "100",\
                                         "description": ""})
         self.assertIn(b'"status":200', result.data)
-        self.assertIn(b'"sku":"0000005"', result.data)
-        self.assertNotIn(b'"sku":"0000006"', result.data)
+        self.assertIn(b'"sku":"65SH4FGF"', result.data)
+        self.assertNotIn(b'"sku":"53HA4DWH"', result.data)
+        self.assertNotIn(b'"city":"San Francisco"', result.data)
 
         # test update non-existing item
         result2 = self.client.put("/api/update_inventory/id:100",
-                                  json={"warehouseId": "2",\
-                                        "sku": "0000005",\
+                                  json={"city": "Long Beach",\
+                                        "sku": "69DI1HCU",\
                                         "quantity": "0",\
                                         "description": ""})
         self.assertIn(b'{"data":"item does not exist","status":400}', result2.data)

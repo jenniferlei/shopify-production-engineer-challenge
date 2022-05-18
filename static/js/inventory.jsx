@@ -1,5 +1,13 @@
 "use strict";
 
+const CITIES = [
+  { city: "Irvine", lat: "33.6866447", lon: "-117.8436004" },
+  { city: "Long Beach", lat: "33.8001882", lon: "-118.2263208" },
+  { city: "Los Angeles", lat: "34.0201598", lon: "-118.6925988" },
+  { city: "San Francisco", lat: "37.7576948", lon: "-122.4727052" },
+  { city: "San Jose", lat: "37.2970519", lon: "-121.9578397" },
+];
+
 const PRODUCTS = [
   { sku: "66BI8PMZ", productName: "Ai Yu Jelly", unit: "carton" },
   { sku: "47LS3QEJ", productName: "Almond Jelly", unit: "carton" },
@@ -38,9 +46,9 @@ const getProductName = (sku) => {
   return [product.productName, product.unit];
 };
 
-const validateForm = (warehouseId, sku, qty) => {
+const validateForm = (city, sku, qty) => {
   if (
-    warehouseId === "" ||
+    city === "" ||
     sku === "" ||
     qty === "" ||
     Number(qty) < 0 ||
@@ -54,14 +62,14 @@ const validateForm = (warehouseId, sku, qty) => {
 };
 
 const UpdateInventoryModal = (props) => {
-  const [warehouseId, setWarehouseId] = React.useState(props.warehouseId);
+  const [city, setCity] = React.useState(props.city);
   const [sku, setSku] = React.useState(props.sku);
   const [quantity, setQuantity] = React.useState(props.quantity);
   const [description, setDescription] = React.useState(props.description);
   const [productName, unit] = getProductName(props.sku);
 
   const validateUpdateForm = () => {
-    if (validateForm(warehouseId, sku, quantity)) {
+    if (validateForm(city, sku, quantity)) {
       updateExistingInventory();
     } else {
       alert("Please enter valid input");
@@ -76,7 +84,7 @@ const UpdateInventoryModal = (props) => {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        warehouseId,
+        city,
         sku,
         quantity,
         description,
@@ -84,7 +92,6 @@ const UpdateInventoryModal = (props) => {
     })
       .then((response) => response.json())
       .then((jsonResponse) => {
-        console.log(jsonResponse);
         if (props.view === "active") {
           props.getActiveInventory();
         } else {
@@ -120,20 +127,20 @@ const UpdateInventoryModal = (props) => {
             </div>
             <div className="modal-body">
               <div className="mb-3">
-                <label htmlFor="warehouseId">
-                  Warehouse ID <span style={{ color: "red" }}>*</span>
+                <label htmlFor="city">
+                  Warehouse City <span style={{ color: "red" }}>*</span>
                 </label>
                 <select
                   className="form-select"
-                  aria-label="Select Warehouse ID"
-                  id="warehouse-id"
-                  onChange={(event) => setWarehouseId(event.target.value)}
+                  aria-label="Select Warehouse city"
+                  id="warehouse-city"
+                  onChange={(event) => setCity(event.target.value)}
                 >
-                  <option value={props.warehouseId} selected>
-                    {props.warehouseId}
+                  <option value={props.city} selected>
+                    {props.city}
                   </option>
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((wh) => (
-                    <option value={wh}>{wh}</option>
+                  {CITIES.map((x) => (
+                    <option value={x.city}>{x.city}</option>
                   ))}
                 </select>
               </div>
@@ -229,7 +236,6 @@ const DeleteInventoryModal = (props) => {
     })
       .then((response) => response.json())
       .then((jsonResponse) => {
-        console.log(jsonResponse);
         if (props.view === "active") {
           props.getActiveInventory();
         } else {
@@ -300,6 +306,31 @@ const DeleteInventoryModal = (props) => {
 
 const InventoryTableRow = (props) => {
   const [productName, unit] = getProductName(props.sku);
+  const [weatherDescription, setWeatherDescription] = React.useState("");
+
+  React.useEffect(() => {
+    getWeather();
+  }, []);
+
+  const getWeather = () => {
+    const getCoord = (city) => {
+      const weather = CITIES.find((x) => x.city === city);
+      return { lat: weather.lat, lon: weather.lon };
+    };
+
+    const { lat, lon } = getCoord(props.city);
+
+    fetch(`/weather?lat=${lat}&lon=${lon}`)
+      .then((response) => response.json())
+      .then((jsonResponse) => {
+        const currWeather = jsonResponse.weather;
+        const description = currWeather.weather[0].description;
+        const temp = parseInt(currWeather.main.temp);
+        const tempFeel = parseInt(currWeather.main.feels_like);
+        const currWeatherDescription = `${temp}°, feels like ${tempFeel}°, ${description}`;
+        setWeatherDescription(currWeatherDescription);
+      });
+  };
 
   const restoreInventory = () => {
     fetch(`/api/restore_inventory/id:${props.inventoryId}`, {
@@ -307,7 +338,6 @@ const InventoryTableRow = (props) => {
     })
       .then((response) => response.json())
       .then((jsonResponse) => {
-        console.log(jsonResponse);
         if (props.view === "deleted") {
           props.getDeletedInventory();
         } else {
@@ -320,11 +350,6 @@ const InventoryTableRow = (props) => {
       <td>
         <span>
           <small>{props.inventoryId}</small>
-        </span>
-      </td>
-      <td>
-        <span>
-          <small>{props.warehouseId}</small>
         </span>
       </td>
       <td>
@@ -350,6 +375,16 @@ const InventoryTableRow = (props) => {
       <td>
         <span>
           <small>{unit}</small>
+        </span>
+      </td>
+      <td>
+        <span>
+          <small>{props.city}</small>
+        </span>
+      </td>
+      <td>
+        <span>
+          <small>{weatherDescription}</small>
         </span>
       </td>
       {props.view === "active" ? (
@@ -497,7 +532,7 @@ const InventoryTableRow = (props) => {
 const InventoryContainer = () => {
   const [view, setView] = React.useState("active");
   const [inventories, setInventories] = React.useState([]);
-  const [warehouseId, setWarehouseId] = React.useState("");
+  const [city, setCity] = React.useState("");
   const [sku, setSku] = React.useState("");
   const [quantity, setQuantity] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -510,7 +545,6 @@ const InventoryContainer = () => {
     fetch("/api/inventory/status:0")
       .then((response) => response.json())
       .then((jsonResponse) => {
-        console.log(jsonResponse);
         setInventories(jsonResponse.data);
         setView("active");
       });
@@ -520,7 +554,6 @@ const InventoryContainer = () => {
     fetch("/api/inventory/status:1")
       .then((response) => response.json())
       .then((jsonResponse) => {
-        console.log(jsonResponse);
         setInventories(jsonResponse.data);
         setView("deleted");
       });
@@ -530,14 +563,13 @@ const InventoryContainer = () => {
     fetch("/api/inventory")
       .then((response) => response.json())
       .then((jsonResponse) => {
-        console.log(jsonResponse);
         setInventories(jsonResponse.data);
         setView("all");
       });
   };
 
   const validateAddForm = () => {
-    if (validateForm(warehouseId, sku, quantity)) {
+    if (validateForm(city, sku, quantity)) {
       addInventoryRow();
     } else {
       alert("Please enter valid input");
@@ -552,7 +584,7 @@ const InventoryContainer = () => {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        warehouseId,
+        city,
         sku,
         quantity,
         description,
@@ -560,7 +592,6 @@ const InventoryContainer = () => {
     })
       .then((response) => response.json())
       .then((jsonResponse) => {
-        console.log(jsonResponse);
         if (view === "active") {
           getActiveInventory();
         } else {
@@ -578,7 +609,7 @@ const InventoryContainer = () => {
       <InventoryTableRow
         key={inventoryRow.inventory_id}
         inventoryId={inventoryRow.inventory_id}
-        warehouseId={inventoryRow.warehouse_id}
+        city={inventoryRow.city}
         sku={inventoryRow.sku}
         description={inventoryRow.description}
         quantity={inventoryRow.quantity}
@@ -595,7 +626,7 @@ const InventoryContainer = () => {
       <UpdateInventoryModal
         key={inventoryRow.inventory_id}
         inventoryId={inventoryRow.inventory_id}
-        warehouseId={inventoryRow.warehouse_id}
+        city={inventoryRow.city}
         sku={inventoryRow.sku}
         description={inventoryRow.description}
         quantity={inventoryRow.quantity}
@@ -609,7 +640,7 @@ const InventoryContainer = () => {
       <DeleteInventoryModal
         key={inventoryRow.inventory_id}
         inventoryId={inventoryRow.inventory_id}
-        warehouseId={inventoryRow.warehouse_id}
+        city={inventoryRow.city}
         sku={inventoryRow.sku}
         description={inventoryRow.description}
         quantity={inventoryRow.quantity}
@@ -688,17 +719,17 @@ const InventoryContainer = () => {
             </div>
             <div className="card-body">
               <div className="mb-3">
-                <label htmlFor="warehouseId">
-                  Warehouse ID <span style={{ color: "red" }}>*</span>
+                <label htmlFor="city">
+                  Warehouse City <span style={{ color: "red" }}>*</span>
                 </label>
                 <select
                   className="form-select"
-                  aria-label="Select Warehouse ID"
-                  onChange={(event) => setWarehouseId(event.target.value)}
+                  aria-label="Select Warehouse City"
+                  onChange={(event) => setCity(event.target.value)}
                 >
                   <option value="" selected></option>
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((wh) => (
-                    <option value={wh}>{wh}</option>
+                  {CITIES.map((x) => (
+                    <option value={x.city}>{x.city}</option>
                   ))}
                 </select>
               </div>
@@ -779,12 +810,13 @@ const InventoryContainer = () => {
                 <thead>
                   <tr>
                     <th role="columnheader">ID</th>
-                    <th role="columnheader">Warehouse</th>
                     <th role="columnheader">SKU</th>
                     <th role="columnheader">Product Name</th>
                     <th role="columnheader">Description</th>
                     <th role="columnheader">Quantity</th>
                     <th role="columnheader">Unit</th>
+                    <th role="columnheader">City</th>
+                    <th role="columnheader">Weather</th>
                     {view === "active" ? (
                       <React.Fragment>
                         <th role="columnheader">Edit</th>

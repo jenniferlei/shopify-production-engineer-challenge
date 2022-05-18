@@ -1,7 +1,6 @@
 """Models for Inventory app."""
 
 from flask_sqlalchemy import SQLAlchemy
-
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -12,7 +11,7 @@ class Inventory(db.Model):
     __tablename__ = "inventories"
 
     inventory_id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
-    warehouse_id = db.Column(db.Integer, nullable=False) # Can add a table for warehouse storage info and change this to a foreign key
+    city = db.Column(db.String, nullable=False) # Can add a table for warehouse storage info and change this to a foreign key
     sku = db.Column(db.String(8), nullable=False) # Can add a table for product info and change this to a foreign key
     quantity = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String)
@@ -22,12 +21,12 @@ class Inventory(db.Model):
     comments = db.Column(db.Text, default=None)
 
     def __repr__(self):
-        return f"<Inventory id={self.inventory_id} sku={self.sku} qty={self.quantity}>"
+        return f"<Inventory id={self.inventory_id} city={self.city} sku={self.sku} qty={self.quantity}>"
 
     def to_dict(self):
         return {
             "inventory_id": self.inventory_id,
-            "warehouse_id": self.warehouse_id,
+            "city": self.city,
             "sku": self.sku,
             "quantity": self.quantity,
             "description": self.description,
@@ -38,11 +37,11 @@ class Inventory(db.Model):
         }
 
     @classmethod
-    def create_inventory(cls, warehouse_id, sku, quantity, description=None,
+    def create_inventory(cls, city, sku, quantity, description=None,
         created=datetime.now(), updated=datetime.now(), deleted=False, comments=None):
         """Create inventory"""
 
-        inventory = cls(warehouse_id=warehouse_id, sku=sku, quantity=quantity,
+        inventory = cls(city=city, sku=sku, quantity=quantity,
             description=description, created=created, updated=updated, deleted=deleted, comments=comments)
 
         return inventory
@@ -85,12 +84,12 @@ def connect_to_db(flask_app, db_uri="postgresql:///inventory", echo=True):
 def example_data():
     """Create example data for the test database."""
     
-    inventory1 = Inventory.create_inventory(1, "53HA4DWH", 50)
-    inventory2 = Inventory.create_inventory(1, "65SH4FGF", 50)
-    inventory3 = Inventory.create_inventory(1, "69DI1HCU", 50)
-    inventory4 = Inventory.create_inventory(1, "84QZ3GVS", 75)
+    inventory1 = Inventory.create_inventory("San Francisco", "53HA4DWH", 50)
+    inventory2 = Inventory.create_inventory("Los Angeles", "65SH4FGF", 50)
+    inventory3 = Inventory.create_inventory("San Jose", "69DI1HCU", 50)
+    inventory4 = Inventory.create_inventory("Long Beach", "84QZ3GVS", 75)
 
-    inventory5 = Inventory.create_inventory(1, "53HA4DWH", 10, deleted=True, comments="This batch went bad")
+    inventory5 = Inventory.create_inventory("Irvine", "53HA4DWH", 10, deleted=True, comments="This batch went bad")
 
     db.session.add_all([inventory1, inventory2, inventory3, inventory4, inventory5])
     db.session.commit()

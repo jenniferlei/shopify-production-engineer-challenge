@@ -3,6 +3,7 @@
 from flask import Flask, render_template, jsonify, request
 import os
 from datetime import datetime
+import requests
 
 from model import connect_to_db, db, Inventory
 
@@ -11,13 +12,12 @@ app = Flask(__name__)
 app.secret_key = os.environ["APP_SECRET_KEY"]
 
 
-def validate_fields(warehouse_id=1, sku="1", quantity=1):
+def validate_fields(city="Los Angeles", sku="1", quantity=1):
     """Form fields error handling"""
-    if not str(warehouse_id).isnumeric() or \
-       not str(sku).isalnum() or \
+    if not str(sku).isalnum() or \
        len(str(sku)) > 8 or \
        not str(quantity).isnumeric() or \
-       warehouse_id == "" or \
+       city == "" or \
        sku == "" or \
        quantity == "" or \
        int(quantity) < 0 or \
@@ -37,15 +37,15 @@ def homepage():
 def create_inventory():
     """Create an inventory row and return a JSON response of inventories"""
 
-    warehouse_id = request.get_json().get("warehouseId")
+    city = request.get_json().get("city")
     sku = request.get_json().get("sku")
     quantity = request.get_json().get("quantity")
     description = request.get_json().get("description")
 
-    if not validate_fields(warehouse_id, sku, quantity):
+    if not validate_fields(city, sku, quantity):
         return jsonify(data="invalid input", status=400)
 
-    inventory_row = Inventory.create_inventory(int(warehouse_id), sku, int(quantity), description)
+    inventory_row = Inventory.create_inventory(city, sku, int(quantity), description)
     db.session.add(inventory_row)
     db.session.commit()
     
@@ -83,12 +83,12 @@ def view_inventory_by_status(status):
 def update_inventory(inventory_id):
     """Update and return a JSON response of inventories"""
 
-    warehouse_id = request.get_json().get("warehouseId")
+    city = request.get_json().get("city")
     sku = request.get_json().get("sku")
     quantity = request.get_json().get("quantity")
     description = request.get_json().get("description")
 
-    if not validate_fields(warehouse_id, sku, quantity):
+    if not validate_fields(city, sku, quantity):
         return jsonify(data="invalid input", status=400)
 
     inventory_row = Inventory.retrieve_inventory_by_inventory_id(inventory_id)
@@ -99,7 +99,7 @@ def update_inventory(inventory_id):
     if inventory_row.deleted:
         return jsonify(data="cannot update deleted item", status=400)
 
-    inventory_row.warehouse_id = int(warehouse_id)
+    inventory_row.city = city
     inventory_row.sku = sku
     inventory_row.quantity = int(quantity)
     inventory_row.description = description
@@ -152,6 +152,24 @@ def restore_inventory(inventory_id):
     inventory_json = inventory_row.to_dict()
     
     return jsonify(data=inventory_json, status=200)
+
+
+@app.route("/weather", methods=["GET"])
+def get_weather():
+    """Get current weather for city."""
+    
+    lat = request.args.get("lat")
+    lon = request.args.get("lon")
+
+    url = f"http://api.openweathermap.org/data/2.5/weather"
+    payload = {"lat": lat,
+               "lon": lon,
+               "units": "imperial",
+               "appid": os.environ["OPEN_WEATHER_KEY"]}
+    res = requests.get(url, params=payload)
+    weather = res.json()
+
+    return jsonify(weather=weather)
 
 
 if __name__ == "__main__":
