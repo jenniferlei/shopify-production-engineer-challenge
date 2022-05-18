@@ -40,7 +40,7 @@ View the app on Replit: [replit](https://replit.com/@jenniferlei/shopify-product
 **Backend:** Python3, Flask, SQLAlchemy\
 **Frontend:** JavaScript (React), HTML5, CSS3, Bootstrap\
 **Database:** PostgreSQL\
-**API:** [OpenWeather](https://openweathermap.org/api)\
+**API:** [OpenWeather](https://openweathermap.org/api)
 
 ## Installation
 
@@ -109,7 +109,7 @@ HTTP POST `/api/create_inventory`
 
 <details>
   <summary>Request</summary>
-  <strong>warehouseId</strong>&emsp;&emsp;warehouse id | integer | required
+  <strong>city</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;warehouse city | integer | required
   <br><strong>sku</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;stock keeping unit | alphanumeric string (max 8 char) | required
   <br><strong>quantity</strong>&emsp;&emsp;&emsp;&emsp;&nbsp;stock quantity | integer | required
   <br><strong>description</strong>&emsp;&emsp;&emsp;stock description | string
@@ -120,8 +120,7 @@ HTTP POST `/api/create_inventory`
 <strong>data</strong>
 <br>
 &emsp;<strong>inventory_id</strong>&emsp;&ensp;&nbsp;inventory id | integer | required
-  <br>
-&emsp;<strong>warehouse_id</strong>&emsp;warehouse id | integer | required
+  <br>&emsp;<strong>city</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;warehouse city | integer | required
   <br>&emsp;<strong>sku</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;stock keeping unit | alphanumeric string (max 8 char) | required
   <br>&emsp;<strong>quantity</strong>&emsp;&emsp;&emsp;&ensp;&nbsp;stock quantity | integer | required
   <br>&emsp;<strong>description</strong>&emsp;&emsp;&nbsp;stock description | string
@@ -153,6 +152,7 @@ HTTP POST `/api/create_inventory`
 ```
 {
     "data": {
+        "city": "San Jose"
         "comments": null,
         "created": "05/10/2022, 18:51:24",
         "deleted": false,
@@ -161,7 +161,6 @@ HTTP POST `/api/create_inventory`
         "quantity": 10,
         "sku": "66BI8PMZ",
         "updated": "05/10/2022, 18:51:24",
-        "warehouse_id": 1
     },
     "status": 200
 }
@@ -178,7 +177,7 @@ View a list of all inventory items
 <strong>data</strong>
 <br>&emsp;<strong>inventory_id</strong>&emsp;&ensp;&nbsp;inventory id | integer | required
 <br>
-&emsp;<strong>warehouse_id</strong>&emsp;warehouse id | integer | required
+&emsp;<strong>city</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;warehouse city | integer | required
 <br>&emsp;<strong>sku</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;stock keeping unit | alphanumeric string (max 8 char) | required
 <br>&emsp;<strong>quantity</strong>&emsp;&emsp;&emsp;&ensp;&nbsp;stock quantity | integer | required
 <br>&emsp;<strong>description</strong>&emsp;&emsp;&nbsp;stock description | string
@@ -195,6 +194,7 @@ View a list of all inventory items
 {
   "data": [
     {
+      "city": "Long Beach"
       "comments": "expired",
       "created": "05/10/2022, 22:40:30",
       "deleted": true,
@@ -203,9 +203,9 @@ View a list of all inventory items
       "quantity": 5,
       "sku": "66BI8PMZ",
       "updated": "05/11/2022, 12:58:57",
-      "warehouse_id": 2
     },
     {
+      "city": "Irvine"
       "comments": "",
       "created": "05/11/2022, 10:20:31",
       "deleted": false,
@@ -214,7 +214,6 @@ View a list of all inventory items
       "quantity": 30,
       "sku": "21TZ4RWZ",
       "updated": "05/11/2022, 12:53:55",
-      "warehouse_id": 2
     },
     ...
   ]
@@ -239,7 +238,7 @@ where `<status>` is deletion status 0 = false, 1 = true
 <strong>data</strong>
 <br>&emsp;<strong>inventory_id</strong>&emsp;&ensp;&nbsp;inventory id | integer | required
 <br>
-&emsp;<strong>warehouse_id</strong>&emsp;warehouse id | integer | required
+&emsp;<strong>city</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;warehouse city | integer | required
 <br>&emsp;<strong>sku</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;stock keeping unit | alphanumeric string (max 8 char) | required
 <br>&emsp;<strong>quantity</strong>&emsp;&emsp;&emsp;&ensp;&nbsp;stock quantity | integer | required
 <br>&emsp;<strong>description</strong>&emsp;&emsp;&nbsp;stock description | string
@@ -264,7 +263,7 @@ where `<status>` is deletion status 0 = false, 1 = true
       "quantity": 5,
       "sku": "66BI8PMZ",
       "updated": "05/11/2022, 12:58:57",
-      "warehouse_id": 2
+      "city": "Long Beach"
     },
     {
       "comments": "",
@@ -275,7 +274,7 @@ where `<status>` is deletion status 0 = false, 1 = true
       "quantity": 30,
       "sku": "21TZ4RWZ",
       "updated": "05/11/2022, 12:53:55",
-      "warehouse_id": 2
+      "city": "Los Angeles"
     },
     ...
   ]
@@ -291,7 +290,7 @@ where `<inventory_id>` is the ID of the inventory to update
 <details>
   <summary>Request</summary>
   <strong>inventory_id</strong>&emsp;&emsp;&ensp;inventory id | integer | required
-  <br><strong>warehouseId</strong>&emsp;&emsp;warehouse id | integer | required
+  <br><strong>city</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;warehouse city | integer | required
   <br><strong>sku</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;stock keeping unit | alphanumeric string (max 8 char) | required
   <br><strong>quantity</strong>&emsp;&emsp;&emsp;&emsp;&nbsp;stock quantity | integer | required
   <br><strong>description</strong>&emsp;&emsp;&emsp;stock description | string
@@ -302,8 +301,7 @@ where `<inventory_id>` is the ID of the inventory to update
 <strong>data</strong>
 <br>
 &emsp;<strong>inventory_id</strong>&emsp;&ensp;&nbsp;inventory id | integer | required
-  <br>
-&emsp;<strong>warehouse_id</strong>&emsp;warehouse id | integer | required
+  <br>&emsp;<strong>city</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&ensp;warehouse city | integer | required
   <br>&emsp;<strong>sku</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;stock keeping unit | alphanumeric string (max 8 char) | required
   <br>&emsp;<strong>quantity</strong>&emsp;&emsp;&emsp;&ensp;&nbsp;stock quantity | integer | required
   <br>&emsp;<strong>description</strong>&emsp;&emsp;&nbsp;stock description | string
@@ -335,6 +333,7 @@ where `<inventory_id>` is the ID of the inventory to update
 ```
 {
     "data": {
+        "city": "Los Angeles"
         "comments": null,
         "created": "05/10/2022, 17:44:37",
         "deleted": false,
@@ -343,7 +342,6 @@ where `<inventory_id>` is the ID of the inventory to update
         "quantity": 70,
         "sku": "92JD1VKP",
         "updated": "05/10/2022, 19:05:29",
-        "warehouse_id": 1
     },
     "status": 200
 }
@@ -366,8 +364,7 @@ where `<inventory_id>` is the ID of the inventory to delete
 <strong>data</strong>
 <br>
 &emsp;<strong>inventory_id</strong>&emsp;&ensp;&nbsp;inventory id | integer | required
-  <br>
-&emsp;<strong>warehouse_id</strong>&emsp;warehouse id | integer | required
+  <br>&emsp;<strong>city</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;warehouse city | integer | required
   <br>&emsp;<strong>sku</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;stock keeping unit | alphanumeric string (max 8 char) | required
   <br>&emsp;<strong>quantity</strong>&emsp;&emsp;&emsp;&ensp;&nbsp;stock quantity | integer | required
   <br>&emsp;<strong>description</strong>&emsp;&emsp;&nbsp;stock description | string
@@ -399,6 +396,7 @@ where `<inventory_id>` is the ID of the inventory to delete
 ```
 {
     "data": {
+        "city": "San Francisco"
         "comments": "expired",
         "created": "05/10/2022, 18:51:24",
         "deleted": true,
@@ -407,7 +405,6 @@ where `<inventory_id>` is the ID of the inventory to delete
         "quantity": 10,
         "sku": "66BI8PMZ",
         "updated": "05/10/2022, 19:08:56",
-        "warehouse_id": 1
     },
     "status": 200
 }
@@ -421,7 +418,7 @@ where `<inventory_id>` is the ID of the inventory to restore
 
 <details>
   <summary>Request</summary>
-  <strong>inventory_id</strong>&emsp;&emsp;warehouse id | integer | required
+  <strong>inventory_id</strong>&emsp;&emsp;inventory id | integer | required
 </details>
 
 <details>
@@ -429,8 +426,7 @@ where `<inventory_id>` is the ID of the inventory to restore
 <strong>data</strong>
 <br>
 &emsp;<strong>inventory_id</strong>&emsp;&ensp;&nbsp;inventory id | integer | required
-  <br>
-&emsp;<strong>warehouse_id</strong>&emsp;warehouse id | integer | required
+  <br>&emsp;<strong>city</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;warehouse city | integer | required
   <br>&emsp;<strong>sku</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;stock keeping unit | alphanumeric string (max 8 char) | required
   <br>&emsp;<strong>quantity</strong>&emsp;&emsp;&emsp;&ensp;&nbsp;stock quantity | integer | required
   <br>&emsp;<strong>description</strong>&emsp;&emsp;&nbsp;stock description | string
@@ -462,6 +458,7 @@ where `<inventory_id>` is the ID of the inventory to restore
 ```
 {
     "data": {
+        "city": "San Francisco"
         "comments": "expired",
         "created": "05/10/2022, 18:51:24",
         "deleted": false,
@@ -470,7 +467,6 @@ where `<inventory_id>` is the ID of the inventory to restore
         "quantity": 20,
         "sku": "21TZ4RWZ",
         "updated": "05/10/2022, 19:09:19",
-        "warehouse_id": 3
     },
     "status": 200
 }
