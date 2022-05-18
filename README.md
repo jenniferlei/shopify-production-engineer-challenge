@@ -1,4 +1,4 @@
-# Shopify Backend Developer Challenge
+# Shopify Production Developer Challenge
 
 **CONTENTS**
 
@@ -19,6 +19,12 @@ Basic CRUD Functionalities:
 - Delete inventory items
 - View a list of inventory items
 
+Additional requirements:
+
+- Each inventory item should be associated with a city where the item is stored
+- There are only 5 possible cities used for storage, which can be hard-coded into the application
+- The list of items in the inventory must include the city and a simple textual description of the current weather
+
 Additional Feature:
 
 - When deleting, allow deletion comments and undeletion
@@ -27,13 +33,14 @@ I chose to use Flask, a lightweight web framework that is flexible and simple to
 
 Python unittests were added to ensure the API endpoints returned the correct JSON response.
 
-View the app on Replit: [replit](https://replit.com/@jenniferlei/shopify-backend-developer-challenge#main.py) | [site](https://shopify-backend-developer-challenge.jenniferlei.repl.co/)
+View the app on Replit: [replit](https://replit.com/@jenniferlei/shopify-production-engineer-challenge#main.py) | [site](https://shopify-production-engineer-challenge.jenniferlei.repl.co/)
 
 ## Tech Stack
 
 **Backend:** Python3, Flask, SQLAlchemy
 **Frontend:** JavaScript (React), HTML5, CSS3, Bootstrap
 **Database:** PostgreSQL
+**API:** [OpenWeather](https://openweathermap.org/api)
 
 ## Installation
 
@@ -48,7 +55,7 @@ To run Shopify Coding Challenge on your local machine, follow the instructions b
 Clone repository:
 
 ```
-$ git clone https://github.com/jenniferlei/shopify-backend-developer-challenge.git
+$ git clone https://github.com/jenniferlei/shopify-production-engineer-challenge.git
 ```
 
 Create and activate a virtual environment inside your project directory:
@@ -72,15 +79,15 @@ Install the dependencies:
 (env) python3 seed.py
 ```
 
-Note: if you do not run `seed.py`, make sure you create a database named
-inventory:
-`createdb inventory`.
-
-Create a secrets.sh file to assign a value to APP_SECRET_KEY and run it:
+Create a secrets.sh file to assign values to APP_SECRET_KEY and OPEN_WEATHER_KEY.
+Obtain an API key for OPEN_WEATHER_KEY at [OpenWeather](https://openweathermap.org/api)
 
 ```
 export APP_SECRET_KEY="<your_secret_key>"
+export OPEN_WEATHER_KEY="<your_weather_api_key>"
 ```
+
+Run secrets.sh:
 
 ```
 (env) source secrets.sh
