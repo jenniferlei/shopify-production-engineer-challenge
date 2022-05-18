@@ -692,7 +692,7 @@ const InventoryContainer = () => {
                 <a
                   className="nav-link btn"
                   target="_blank"
-                  href="https://github.com/jenniferlei/shopify-backend-developer-challenge"
+                  href="https://github.com/jenniferlei/shopify-production-engineer-challenge"
                 >
                   Github
                 </a>
@@ -701,7 +701,7 @@ const InventoryContainer = () => {
                 <a
                   className="nav-link btn"
                   target="_blank"
-                  href="https://shopify-backend-developer-challenge.jenniferlei.repl.co"
+                  href="https://shopify-production-engineer-challenge.jenniferlei.repl.co"
                 >
                   Replit
                 </a>
