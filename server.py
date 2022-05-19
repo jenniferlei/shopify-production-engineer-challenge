@@ -154,7 +154,7 @@ def restore_inventory(inventory_id):
     return jsonify(data=inventory_json, status=200)
 
 
-@app.route("/weather", methods=["GET"])
+@app.route("/api/weather", methods=["GET"])
 def get_weather():
     """Get current weather for city."""
     
