@@ -474,7 +474,7 @@ where `<inventory_id>` is the ID of the inventory to restore
 
 ### View warehouse city weather
 
-HTTP GET `/api/weather?lat=<latitude>&lon=<lon>`
+HTTP GET `/api/weather?lat=<lat>&lon=<lon>`
 
 where `<lat>` is the location latitude and `<lon>` is the location longitude
 
