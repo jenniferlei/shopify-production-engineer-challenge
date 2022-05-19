@@ -320,7 +320,7 @@ const InventoryTableRow = (props) => {
 
     const { lat, lon } = getCoord(props.city);
 
-    fetch(`/weather?lat=${lat}&lon=${lon}`)
+    fetch(`/api/weather?lat=${lat}&lon=${lon}`)
       .then((response) => response.json())
       .then((jsonResponse) => {
         const currWeather = jsonResponse.weather;

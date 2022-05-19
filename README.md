@@ -472,6 +472,68 @@ where `<inventory_id>` is the ID of the inventory to restore
 }
 ```
 
+### View warehouse city weather
+
+HTTP GET `/api/weather?lat=<latitude>&lon=<lon>`
+
+where `<lat>` is the location latitude and `<lon>` is the location longitude
+
+<details>
+  <summary>Request</summary>
+  <strong>lat</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;latitude | string | required
+  <br><strong>lon</strong>&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;longitude | string | required
+</details>
+
+#### Example : `http://localhost:5000/api/weather?lat=33.6866447&lon=-117.8436004`
+
+```
+{
+  "weather": {
+    "base": "stations",
+    "clouds": {
+      "all": 20
+    },
+    "cod": 200,
+    "coord": {
+      "lat": 33.6866,
+      "lon": -117.8436
+    },
+    "dt": 1652913035,
+    "id": 5359777,
+    "main": {
+      "feels_like": 73.15,
+      "humidity": 59,
+      "pressure": 1014,
+      "temp": 73.35,
+      "temp_max": 89.91,
+      "temp_min": 60.87
+    },
+    "name": "Irvine",
+    "sys": {
+      "country": "US",
+      "id": 2009264,
+      "sunrise": 1652878116,
+      "sunset": 1652928436,
+      "type": 2
+    },
+    "timezone": -25200,
+    "visibility": 10000,
+    "weather": [
+      {
+        "description": "few clouds",
+        "icon": "02d",
+        "id": 801,
+        "main": "Clouds"
+      }
+    ],
+    "wind": {
+      "deg": 210,
+      "speed": 11.5
+    }
+  }
+}
+```
+
 ## About the Developer
 
 Jennifer Lei is a software engineer in the Greater Los Angeles Area. She previously worked in multiple fields, such as B2B tech sales, finance and e-commerce. After a layoff, she decided to follow her dream and pivoted to software engineering. She has enjoyed every minute of it since!
